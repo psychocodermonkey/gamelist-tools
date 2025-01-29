@@ -19,13 +19,12 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import List, Optional
-import xml.dom.minidom as XML
 import re
 import os
-
+import xml.dom.minidom as XML
+from datetime import datetime
+from typing import List, Optional
+from dataclasses import dataclass, field
 
 
 @dataclass(slots=True)
@@ -168,6 +167,7 @@ class Gamelist:
   | altemulator     | Optional[str]       | For forks that utilize the gamelist.xml to store what emulator to launch games with.  |
 
   """
+
   path: str
   system: str
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
@@ -199,6 +199,7 @@ class RawGamelist:
   | gamelist        | Optional[xml.dom.minidom.Element]     | A list of games in the gamelist.xml file as Game Objects.              |
 
   """
+
   path: str
   system: Optional[str] = None
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')

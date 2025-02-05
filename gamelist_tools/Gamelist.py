@@ -19,8 +19,6 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
-import re
-import os
 import xml.dom.minidom as XML
 from datetime import datetime
 from typing import List, Optional
@@ -122,7 +120,7 @@ class Game:
   hidden: Optional[bool] = field(default=False)
   broken: Optional[bool] = field(default=False)
   kidgame: Optional[bool] = field(default=False)
-  nogamecontent: Optional[bool] = field(default=False)
+  nogamecount: Optional[bool] = field(default=False)
   hidemetadata: Optional[bool] = field(default=False)
   nomultiscrape: Optional[bool] = field(default=False)
   md5: Optional[str] = None
@@ -161,7 +159,7 @@ class Gamelist:
   | Property        | Type                | Description |
   |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
   | path            | str                 | The path to the gamelist file.                                                        |
-  | system          |[str                 | Best guess as to the system based on the enclosing directory name.                    |
+  | system          | str                 | Best guess as to the system based on the enclosing directory name.                    |
   | games           | List[Game]          | A list of games in the gamelist.xml file as Game Objects.                             |
   | xml_decl        | Optional[str]       | The XML declaration at the top of the gamelist file.                                  |
   | altemulator     | Optional[str]       | For forks that utilize the gamelist.xml to store what emulator to launch games with.  |
@@ -204,32 +202,3 @@ class RawGamelist:
   system: Optional[str] = None
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
   gamelist: Optional[XML.Element] = None
-
-
-def get_gamelist_data(path: str) -> RawGamelist:
-  """Reads the gamelist file and returns a RawGamelist object."""
-  raw = RawGamelist(path=path)
-
-  # Dump the raw data from the file.
-  with open(path, 'r') as f:
-    raw.gamelist = f.read()
-
-    # Find the XML declaration at the head of the file so it doesn't have to be found later.
-    index = 0
-    pattern = r"""<\?xml\s+version="(\d+\.\d+|\d*\.\d+)"\s*(?:encoding="[^"]*")?\s*\?>"""
-    match = re.match(pattern, raw.gamelist)
-    if match:
-      raw.xml_decl = match.group(0)
-      index = match.end()
-
-    # Get the best guess at the system name since most of the time the gamelist.xml is in a "system" directory.
-    parts = raw.path.split(os.sep)
-    raw.system = parts[next((i for i, x in enumerate(parts) if x == 'gamelist.xml'), None) - 1]
-
-    # Parse and fix the XML for compatibility with XML and set it back to normal XML.
-    parsed = f"""<root>{raw.gamelist[index:]}</root>"""
-    xml_parser = XML.parseString(parsed)
-    root = xml_parser.documentElement
-    raw.gamelist = root.getElementsByTagName('gameList')[0]
-
-  return raw

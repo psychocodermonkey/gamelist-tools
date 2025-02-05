@@ -23,9 +23,9 @@ import argparse
 
 # import xml.dom.minidom as xml
 # from os import walk
-from os.path import join, dirname, basename
-from gamelist_tools import Gamelist
-from gamelist_tools.ubiquitous import find_lists
+from os.path import join
+from gamelist_tools import ESDE
+
 
 PATH = ''
 
@@ -34,18 +34,10 @@ def main(path: str) -> None:
   """
   Main
   """
-  gamelist_path = join(path, 'gamelists')
-  gamelist_files = find_lists(gamelist_path)
-
-  gamelists = []
-  for doc in gamelist_files:
-    raw_gl = Gamelist.get_gamelist_data(doc['path'])
-    gamelists.append(raw_gl)
-
-  for gamelist in gamelists:
-    print(
-      f'  System: {gamelist.system}\n    Path: {gamelist.path}\nXML data: {len(gamelist.gamelist.toxml())} bytes\n\n'
-    )
+  esde_path = 'dev.data/source/RoamData/ES-DE'
+  test = ESDE.parse_gamelist_data(esde_path)
+  for sys in test:
+    print(f'{sys.system} - # Games: {len(sys.games)}')
 
 
 # If the pofc.py is run (instead of imported as a module),

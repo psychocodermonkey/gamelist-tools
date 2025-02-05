@@ -18,27 +18,43 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
-from os import walk
-from os.path import join, dirname, basename
+import os
+import re
+import xml.dom.minidom as XML
+from .Gamelist import RawGamelist
 
 
-def find_lists(directory: str) -> dict:
+def find_lists(directory: str) -> list:
   """
   Recursively search through the directory structure looking for 'gamelist.xml' files.
 
   :param directory: The root directory to start searching f rom.
   :return: A list of paths to gamelist.xml files found.
+
+  ```python
+    find_lists(directory: str) -> dict:
+  ```
+
+  ## Properties
+  | Property        | Type                | Description |
+  |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
+  | directory       | str                 | The path to a directory structure that contains gamelist files.                       |
+
   """
 
   gamelist_files = []
 
   # Walk through the directory structure
-  for root, _, files in walk(directory):
+  for root, _, files in os.walk(directory):
     for file in files:
+
+      # Look for gamelist.xml files
       if file == 'gamelist.xml':
-        filepath = join(root, file)
+
+        # Build a dictionary with the system name (folder) ad the full file path
+        filepath = os.path.join(root, file)
         gamelist = {
-          'system': basename(root),
+          'system': os.path.basename(root),
           'path': filepath,
         }
         gamelist_files.append(gamelist)
@@ -46,11 +62,48 @@ def find_lists(directory: str) -> dict:
   return gamelist_files
 
 
-def read(path) -> list:
+def get_gamelist_data(path: str) -> RawGamelist:
   """
-  Read a gamelist.xml file and parse it into a Python dictionary.
+  # Get Gamelist Data
+  ```python
+    Gamelist.get_gamelist_data(path: str) -> RawGamelist
+  ```
+
+  Reads the gamelist file and returns a RawGamelist object containing the path, system, and XML gamelist data as
+  a ```xml.dom.minidom.Element```.
+
+
+  ## Properties
+  | Property        | Type                | Description |
+  |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
+  | path            | str                 | The path to the gamelist file.                                                        |
+
   """
-  pass
+  raw = RawGamelist(path=path)
+
+  # Dump the raw data from the file.
+  with open(path, 'r') as f:
+    raw.gamelist = f.read()
+
+    # Find the XML declaration at the head of the file so it doesn't have to be found later.
+    index = 0
+    pattern = r"""<\?xml\s+version="(\d+\.\d+|\d*\.\d+)"\s*(?:encoding="[^"]*")?\s*\?>"""
+    match = re.match(pattern, raw.gamelist)
+    if match:
+      raw.xml_decl = match.group(0)
+      index = match.end()
+
+    # Get the best guess at the system name since most of the time the gamelist.xml is in a "system" directory.
+    parts = raw.path.split(os.sep)
+    raw.system = parts[next((i for i, x in enumerate(parts) if x == 'gamelist.xml'), None) - 1]
+
+    # Parse and fix the XML for compatibility with XML and set it back to normal XML.
+    parsed = f"""<root>{raw.gamelist[index:]}</root>"""
+    xml_parser = XML.parseString(parsed)
+    root = xml_parser.documentElement
+    raw.gamelist = root.getElementsByTagName('gameList')[0]
+
+  return raw
 
 
 def update(path) -> bool:
@@ -65,3 +118,36 @@ def output(data, path) -> bool:
   Output the parsed data to a gamelist.xml file.
   """
   pass
+
+
+def parse_value(value_type: str, value: str) -> (bool | int | str):
+  """
+  # Convert XML string values to appropriate Python types.
+
+    ```python
+      parse_value(value_type: str, value)
+    ```
+
+  ## Properties
+  | Property        | Type                | Description |
+  |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
+  | value_type      | str                 | Value type defined as the node_name usually.                                          |
+  | value           | str                 | Value that is to be converted to a pythonic type.                                     |
+
+  """
+  if value_type == 'bool':
+    return value.lower() == 'true'  # Convert "true"/"false" to Python bool
+
+  elif value_type == 'int':
+    return int(value)  # Convert to integer
+
+  elif value_type == 'string':
+    return value  # Keep as string
+
+  return value  # Default to string if type is unknown
+
+
+def get_text(node, tag):
+  """Helper function to get text content of an XML tag."""
+  tag_node = node.getElementsByTagName(tag)
+  return tag_node[0].firstChild.nodeValue.strip() if tag_node and tag_node[0].firstChild else None

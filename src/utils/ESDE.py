@@ -22,7 +22,7 @@
 import os
 import re
 import xml.dom.minidom as XML
-from ..models.Gamelist import RawGamelist, Gamelist, Game
+from ..models.Gamelist import Gamelist, Game
 from .ubiquitous import find_lists, get_gamelist_data, get_text, parse_value, find_files, enclosing_directory
 
 
@@ -36,6 +36,8 @@ from .ubiquitous import find_lists, get_gamelist_data, get_text, parse_value, fi
 def parse_gamelist_data(esde_path: str) -> list[Gamelist]:
   """
   # Process all gamelist files for ES-DE
+
+  # TODO: Write proper docstring for parse_gamelist_data
   """
 
   settings = get_settings(esde_path)

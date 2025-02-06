@@ -94,6 +94,8 @@ class Game:
 
   """
 
+  # TODO: Add __str__ and __repr__ methods for Game model
+
   path: str
   name: str
   sortname: Optional[str] = None
@@ -166,6 +168,8 @@ class Gamelist:
 
   """
 
+  # TODO: Add __str__ and __repr__ methods for Gamelist model
+
   path: str
   system: str
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
@@ -197,6 +201,8 @@ class RawGamelist:
   | gamelist        | Optional[xml.dom.minidom.Element]     | A list of games in the gamelist.xml file as Game Objects.              |
 
   """
+
+  # TODO: Add __str__ and __repr__ methods for RawGameList model
 
   path: str
   system: Optional[str] = None

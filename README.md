@@ -65,7 +65,7 @@ Some metadata is also marked as "statistic" - these are kept track of by ES and 
 List of currently planned features.
 
 - [ ] Add support for pointing to ES-DE install to find gamelist and media directories.
-- [ ] Add support for reading ES-DE config to find `downloaded_media` directory.
+- [x] Add support for reading ES-DE config to find `downloaded_media` directory.
 - [ ] Add support for selecting what metadata should be added to the `gamelist.xml` files.
 - [ ] Add support for exporting to `Roms` directory for output and move data accordingly.
 - [ ] Add support for copying media to the appropriate locations based on the updated `gamelist.xml` files.

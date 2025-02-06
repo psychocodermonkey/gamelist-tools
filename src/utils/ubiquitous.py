@@ -21,6 +21,7 @@
 import os
 import re
 import xml.dom.minidom as XML
+from pathlib import Path
 from ..models.Gamelist import RawGamelist
 
 
@@ -151,3 +152,13 @@ def get_text(node, tag):
   """Helper function to get text content of an XML tag."""
   tag_node = node.getElementsByTagName(tag)
   return tag_node[0].firstChild.nodeValue.strip() if tag_node and tag_node[0].firstChild else None
+
+
+def find_files(name, path):
+  """Helper function to crawl directory structure and get files associated with a given filename."""
+  return [f for f in Path(path).rglob(name + '*') if f.is_file()]
+
+
+def enclosing_directory(path: str):
+  """Helper function to get the immediate enclosing directory of a file or directory."""
+  return os.path.basename(os.path.dirname(path))

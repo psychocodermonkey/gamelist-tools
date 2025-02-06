@@ -18,12 +18,8 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
-# import re
 import argparse
-
-# import xml.dom.minidom as xml
-# from os import walk
-# from os.path import join
+import time
 from src.utils import ESDE
 
 
@@ -34,10 +30,17 @@ def main(path: str) -> None:
   """
   Main
   """
-  esde_path = 'dev.data/source/RoamData/ES-DE'
-  test = ESDE.parse_gamelist_data(esde_path)
+
+  start_time = time.perf_counter()
+  print('Starting gamelist processing...')
+  test = ESDE.parse_gamelist_data(path)
+  end_time = time.perf_counter()
+
   for sys in test:
-    print(f'{sys.system} - # Games: {len(sys.games)}')
+    print(f'------ {sys.system} - # Games: {len(sys.games)} ------')
+
+
+  print(f"Gamelist file processing time: {end_time - start_time} seconds")
 
 
 # If the pofc.py is run (instead of imported as a module),

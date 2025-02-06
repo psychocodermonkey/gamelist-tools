@@ -79,7 +79,7 @@ class Game:
   | image                 | MD_PATH              | ""                 | ENTER PATH TO IMAGE                 |
   | thumbnail             | MD_PATH              | ""                 | ENTER PATH TO BOX                   |
   | marquee               | MD_PATH              | ""                 | ENTER PATH TO LOGO                  |
-  | boxart                | MD_PATH              | ""                 | ENTER PATH TO ALT BOXART            |
+  | boxfront              | MD_PATH              | ""                 | ENTER PATH TO ALT BOXART            |
   | boxback               | MD_PATH              | ""                 | ENTER PATH TO BOX BACKGROUND        |
   | box3d                 | MD_PATH              | ""                 | ENTER PATH TO 3D BOX IMAGE          |
   | cartridge             | MD_PATH              | ""                 | ENTER PATH TO CARTRIDGE             |

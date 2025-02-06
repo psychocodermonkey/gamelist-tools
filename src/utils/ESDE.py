@@ -23,7 +23,7 @@ import os
 import re
 import xml.dom.minidom as XML
 from ..models.Gamelist import RawGamelist, Gamelist, Game
-from .ubiquitous import find_lists, get_gamelist_data, get_text, parse_value
+from .ubiquitous import find_lists, get_gamelist_data, get_text, parse_value, find_files, enclosing_directory
 
 
 # TODO: Methods specific to bringing in and interpreting ES-DE gamelist data.
@@ -46,6 +46,20 @@ def parse_gamelist_data(esde_path: str) -> list[Gamelist]:
   imported_data = []
   # Find the gamelists to import information from
   game_lists = find_lists(gamelist_directory)
+
+  # Set up dictionary to map assignment based on media directory
+  set_media_item = {
+    # TODO: Need to get a full successful scrape in order to get every possible directory
+    '3dboxes': lambda: setattr(game, 'box3d', item),
+    'covers': lambda: setattr(game, 'boxfront', item),
+    'manuals': lambda: setattr(game, 'manual', item),
+    'marquees': lambda: setattr(game, 'marquee', item),
+    'miximages': lambda: setattr(game, 'miximage', item),
+    'physicalmedia': lambda: setattr(game, 'cartridge', item),
+    'screenshots': lambda: setattr(game, 'thumbnail', item),
+    'titlescreens': lambda: setattr(game, 'titleshot', item),
+    'videos': lambda: setattr(game, 'video', item),
+  }
 
   # Build a gamelist for each system
   for game_list in game_lists:
@@ -88,7 +102,13 @@ def parse_gamelist_data(esde_path: str) -> list[Gamelist]:
         lastplayed=get_text(game, 'lastplayed'),
       )
 
-      # TODO: Append Media paths to this game from downloaded_media
+      # Get file name to look in media directory for specific system for scraped media.
+      filename = os.path.splitext(os.path.basename(game.path))[0]
+      media = find_files(filename, os.path.join(media_directory, sys.system))
+
+      # Populate full media paths for images, etc.
+      for item in media:
+        set_media_item.get(enclosing_directory(item), lambda: None)()
 
       # Add the game to the list
       sys.games.append(game)

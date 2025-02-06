@@ -23,8 +23,8 @@ import argparse
 
 # import xml.dom.minidom as xml
 # from os import walk
-from os.path import join
-from gamelist_tools import ESDE
+# from os.path import join
+from src.utils import ESDE
 
 
 PATH = ''

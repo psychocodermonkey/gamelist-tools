@@ -21,7 +21,7 @@
 import os
 import re
 import xml.dom.minidom as XML
-from .Gamelist import RawGamelist
+from ..models.Gamelist import RawGamelist
 
 
 def find_lists(directory: str) -> list:

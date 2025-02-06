@@ -22,7 +22,7 @@
 import os
 import re
 import xml.dom.minidom as XML
-from .Gamelist import RawGamelist, Gamelist, Game
+from ..models.Gamelist import RawGamelist, Gamelist, Game
 from .ubiquitous import find_lists, get_gamelist_data, get_text, parse_value
 
 

@@ -37,7 +37,7 @@ class Game:
   This class contains a field for all possibilites in gamelist.xml files.
   It is intended to be universial accross all implementations to allow for conversion between implementations.
 
-  ## Additional Attributes:
+  ## Properties
 
   | Key                   | ES Data Type         | Default value      | Typical Prompt in FE                |
   |:----------------------|:---------------------|:-------------------|:------------------------------------|
@@ -147,6 +147,13 @@ class Game:
   magazine: Optional[str] = None
   folderlink: Optional[str] = None
 
+  def __str__(self):
+    """Return string representation of the game."""
+    return f'{self.name} ({self.releasedate})'
+
+  def __repr__(self) -> str:
+    """Return unique identifier for Gamelist"""
+    return f'<class Game({self.name}) {id(self)}>'
 
 @dataclass(slots=True)
 class Gamelist:
@@ -158,6 +165,7 @@ class Gamelist:
   ```
 
   ## Properties
+
   | Property        | Type                | Description |
   |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
   | path            | str                 | The path to the gamelist file.                                                        |
@@ -176,23 +184,27 @@ class Gamelist:
   altemulator: Optional[str] = field(default=None)
   games: List[Game] = field(default_factory=list)
 
+  def __str__(self) -> str:
+    """Return string representation of the Gamelist"""
+    return f'{self.system - ({len(self.games)})}'
+
+  def __repr__(self) -> str:
+    """Return unique identifier for Gamelist"""
+    return f'<class Gamelist({self.system}) {id(self)}>'
+
 
 @dataclass(slots=True)
 class RawGamelist:
   """
   # RawGamelist
+
   ```python
     RawGameList(path: str, system: Optional[str], xml_decl: Optional[str], gamelist: Optional[XML.Element])
   ```
   This class is used to hold the raw data from a gamelist file, including its path and system name.
 
   ## Properties
-  path     :: str - The path to the gamelist file.
-  system   :: Optional[str] - Best guess as to the system based on the enclosing directory name.
-  xml_decl :: Optional[str] - The XML declaration at the top of the gamelist file.
-  gamelist :: Optional[xml.dom.minidom.Element] - The parsed XML data from the gamelist file.
 
-  ## Properties
   | Property        | Type                | Description |
   |:----------------|:--------------------------------------|:-----------------------------------------------------------------------|
   | path            | str                                   | The path to the gamelist file.                                         |
@@ -208,3 +220,11 @@ class RawGamelist:
   system: Optional[str] = None
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
   gamelist: Optional[XML.Element] = None
+
+  def __str__(self) -> str:
+    """Return string representation of the Gamelist"""
+    return f'{self.system - ({len(self.path)})}'
+
+  def __repr__(self) -> str:
+    """Return unique identifier for Gamelist"""
+    return f'<class RawGamelist({self.system}) {id(self)}>'

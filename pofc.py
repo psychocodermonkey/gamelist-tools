@@ -20,7 +20,7 @@
 
 import argparse
 import time
-from src.utils import ESDE
+from gamelist_tools import ESDE
 
 
 PATH = ''

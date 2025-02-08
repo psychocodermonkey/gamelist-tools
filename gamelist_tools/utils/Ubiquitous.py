@@ -37,9 +37,10 @@ def find_lists(directory: str) -> list:
   ```
 
   ## Properties
-  | Property        | Type                | Description |
-  |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
-  | directory       | str                 | The path to a directory structure that contains gamelist files.                       |
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:---------------------------------------------------------------------|
+  | directory       | str       | The path to a directory structure that contains gamelist files.      |
 
   """
 
@@ -75,11 +76,13 @@ def get_gamelist_data(path: str) -> RawGamelist:
 
 
   ## Properties
-  | Property        | Type                | Description |
-  |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
-  | path            | str                 | The path to the gamelist file.                                                        |
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:------------------------------------|
+  | path            | str       | The path to the gamelist file.      |
 
   """
+
   raw = RawGamelist(path=path)
 
   # Dump the raw data from the file.
@@ -113,6 +116,7 @@ def output(data, path) -> bool:
 
   TODO: Write proper docstring for output
   """
+
   pass
 
 
@@ -125,12 +129,14 @@ def parse_value(value_type: str, value: str) -> (bool | int | str):
     ```
 
   ## Properties
-  | Property        | Type                | Description |
-  |:----------------|:--------------------|:--------------------------------------------------------------------------------------|
-  | value_type      | str                 | Value type defined as the node_name usually.                                          |
-  | value           | str                 | Value that is to be converted to a pythonic type.                                     |
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:-------------------------------------------------------|
+  | value_type      | str       | Value type defined as the node_name usually.           |
+  | value           | str       | Value that is to be converted to a pythonic type.      |
 
   """
+
   if value_type == 'bool':
     return value.lower() == 'true'  # Convert "true"/"false" to Python bool
 
@@ -143,20 +149,68 @@ def parse_value(value_type: str, value: str) -> (bool | int | str):
   return value  # Default to string if type is unknown
 
 
-def get_text(node, tag):
-  """Helper function to get text content of an XML tag."""
-  # TODO: Write proper docstring for get_text
-  tag_node = node.getElementsByTagName(tag)
+def get_text(node: XML.Element, value: str) -> str:
+  """
+  # Get text from XML Node
+
+  Return the value for a given XML node name.
+
+  ```python
+    get_text(node: xml.dom.minidom.Element, tag: str) - str
+  ```
+
+  ## Properties
+
+  | Property        | Type                        | Description |
+  |:----------------|:----------------------------|:-------------------------------------------------------------------------|
+  | node            | xml.dom.minidom.Element     | XML element to grab the first child that matches the requested tag       |
+  | value           | str                         | Element to search for to return the associated value.                    |
+
+  """
+
+  tag_node = node.getElementsByTagName(value)
   return tag_node[0].firstChild.nodeValue.strip() if tag_node and tag_node[0].firstChild else None
 
 
-def find_files(name, path):
-  """Helper function to crawl directory structure and get files associated with a given filename."""
-  # TODO: Write proper docstring for find_files
+def find_files(name: str, path: str) -> list[Path]:
+  """
+  # Find files matching by name in path recursively
+
+  Find all files in a tree that match a file name. Filename is wild carded from beginning of filename.
+
+  ```python
+    find_files(name: str, path: str) -> list[Path]
+  ```
+
+  ## Properties
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:--------------------------------------------|
+  | name            | str       | Filename to search directory tree for.      |
+  | path            | str       | Starting directory.                         |
+
+  """
+
+  # TODO: Look into if this should or should not be case insensitive.
   return [f for f in Path(path).rglob(name + '*') if f.is_file()]
 
 
 def enclosing_directory(path: str):
-  """Helper function to get the immediate enclosing directory of a file or directory."""
-  # TODO: Write proper docstring for enclosing_directory
+  """
+  # Return Enclosing directory for a file system object.
+
+  File system object can be a direcotry or file, so long as it can be pointed to with a filesystem path.
+
+  ```python
+    enclosing_directory(path: str) -> str
+  ```
+
+  ## Properties
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:----------------------------------------------------------------|
+  | path            | str       | Path to filesystem object to find enclosing directory for.      |
+
+  """
+
   return os.path.basename(os.path.dirname(path))

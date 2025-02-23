@@ -52,8 +52,8 @@ if __name__ == '__main__':
   parser.add_argument(
     '--path',
     '-p',
-    default='data/ES-DE',
-    required=True,
+    default='__exclude/data/RoamData/ES-DE',
+    required=False,
     help='Specify the path to the ES-DE directory.',
   )
 

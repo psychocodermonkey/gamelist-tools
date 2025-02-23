@@ -94,8 +94,6 @@ class Game:
 
   """
 
-  # TODO: Add __str__ and __repr__ methods for Game model
-
   path: str
   name: str
   sortname: Optional[str] = None
@@ -155,6 +153,56 @@ class Game:
     """Return unique identifier for Gamelist"""
     return f'<class Game({self.name}) {id(self)}>'
 
+  def __eq__(self, other: 'Game') -> bool:
+    """Return equality based on game name, release date, then path."""
+    if not isinstance(other, Game):
+      return False
+
+    return (
+      self.name == other.name and self.releasedate == other.releasedate and self.path == other.path
+    )
+
+  def __lt__(self, other: 'Game') -> bool:
+    """Return if the current game is less than another by name and release date."""
+    if not isinstance(other, Game):
+      return NotImplemented
+
+    if self.name != other.name:
+      return self.name < other.name
+
+    return self.releasedate < other.releasedate
+
+  def __le__(self, other: 'Game') -> bool:
+    """Reutrn if the current game is less than or equal to another by name and release date."""
+    if not isinstance(other, Game):
+      return False
+
+    if self.name != other.name:
+      return self.name <= other.name
+
+    return self.releasedate <= other.releasedate
+
+  def __gt__(self, other: 'Game') -> bool:
+    """Return if the current game is greater than another by name and release date."""
+    if not isinstance(other, Game):
+      return NotImplemented
+
+    if self.name != other.name:
+      return self.name > other.name
+
+    return self.releasedate > other.releasedate
+
+  def __ge__(self, other: 'Game') -> bool:
+    """Return if the current game is greater than or equal to another by name and release date."""
+    if not isinstance(other, Game):
+      return False
+
+    if self.name != other.name:
+      return self.name >= other.name
+
+    return self.releasedate >= other.releasedate
+
+
 @dataclass(slots=True)
 class Gamelist:
   """
@@ -176,8 +224,6 @@ class Gamelist:
 
   """
 
-  # TODO: Add __str__ and __repr__ methods for Gamelist model
-
   path: str
   system: str
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
@@ -185,12 +231,24 @@ class Gamelist:
   games: List[Game] = field(default_factory=list)
 
   def __str__(self) -> str:
-    """Return string representation of the Gamelist"""
-    return f'{self.system - ({len(self.games)})}'
+    """Return string representation of the Gamelist."""
+    return f'{self.system} - ({len(self.games)} games)'
+
+  def __len__(self) -> int:
+    """Return the number of games in the Gamelist."""
+    return len(self.games)
 
   def __repr__(self) -> str:
-    """Return unique identifier for Gamelist"""
+    """Return unique identifier for Gamelist."""
     return f'<class Gamelist({self.system}) {id(self)}>'
+
+  def sort(self) -> None:
+    """Sort games in place"""
+    self.games = sorted(self.games)
+
+  def sorted(self) -> List[Game]:
+    """Return a sorted list of games in this Gamelist."""
+    return sorted(self.games)
 
 
 @dataclass(slots=True)
@@ -214,8 +272,6 @@ class RawGamelist:
 
   """
 
-  # TODO: Add __str__ and __repr__ methods for RawGameList model
-
   path: str
   system: Optional[str] = None
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
@@ -223,7 +279,7 @@ class RawGamelist:
 
   def __str__(self) -> str:
     """Return string representation of the Gamelist"""
-    return f'{self.system - ({len(self.path)})}'
+    return f'{self.system} - ({len(self.path)} games)'
 
   def __repr__(self) -> str:
     """Return unique identifier for Gamelist"""

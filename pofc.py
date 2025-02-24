@@ -21,26 +21,40 @@
 import argparse
 import time
 from gamelist_tools import ESDE
+from gamelist_tools import Batocera
+from gamelist_tools.utils.Ubiquitous import gen_xml
 
 
 PATH = ''
-
+TEST = ''
 
 def main(path: str) -> None:
   """
   Main
   """
+  global TEST
 
   start_time = time.perf_counter()
   print('Starting gamelist processing...')
-  test = ESDE.parse_gamelist_data(path)
+  TEST = ESDE.parse_gamelist_data(path)
   end_time = time.perf_counter()
 
-  for sys in test:
+  TEST = sorted(TEST)
+
+  for sys in TEST:
     print(f'------ {sys.system} - # Games: {len(sys.games)} ------')
 
 
-  print(f"Gamelist file processing time: {end_time - start_time} seconds")
+  print(f"Gamelist file processing time: {end_time - start_time} seconds\n")
+
+  gl = TEST[9]
+  gl.sort()
+  print(f"XML Generation: for {gl.system}\n")
+  Batocera_mapping = Batocera.return_mapping()
+
+  doc = gen_xml(gl, Batocera_mapping)
+  xml_str = doc
+  print(xml_str)
 
 
 # If the pofc.py is run (instead of imported as a module),

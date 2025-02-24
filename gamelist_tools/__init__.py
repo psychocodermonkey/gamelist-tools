@@ -20,5 +20,6 @@
 """
 
 from .utils import ESDE as ESDE
+from .utils import Batocera as Batocera
 from .utils import Ubiquitous as Ubiquitous
 from .models import Gamelist as Gamelist

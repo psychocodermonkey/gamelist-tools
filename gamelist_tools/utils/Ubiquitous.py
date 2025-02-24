@@ -22,7 +22,7 @@ import os
 import re
 import xml.dom.minidom as XML
 from pathlib import Path
-from ..models.Gamelist import RawGamelist
+from ..models.Gamelist import RawGamelist, Gamelist, Game
 
 
 def find_lists(directory: str) -> list:
@@ -110,7 +110,7 @@ def get_gamelist_data(path: str) -> RawGamelist:
   return raw
 
 
-def output(data, path) -> bool:
+def output(path: str, doc: str) -> None:
   """
   Output the gamelist.xml file in XML format with proper indentation and encoding for all frontends.
 
@@ -172,14 +172,14 @@ def get_text(node: XML.Element, value: str) -> str:
   return tag_node[0].firstChild.nodeValue.strip() if tag_node and tag_node[0].firstChild else None
 
 
-def find_files(name: str, path: str) -> list[Path]:
+def find_files(name: str, path: str) -> list[str]:
   """
   # Find files matching by name in path recursively
 
   Find all files in a tree that match a file name. Filename is wild carded from beginning of filename.
 
   ```python
-    find_files(name: str, path: str) -> list[Path]
+    find_files(name: str, path: str) -> list[str]
   ```
 
   ## Properties
@@ -192,7 +192,7 @@ def find_files(name: str, path: str) -> list[Path]:
   """
 
   # TODO: Look into if this should or should not be case insensitive.
-  return [f for f in Path(path).rglob(name + '*') if f.is_file()]
+  return [str(f) for f in Path(path).rglob(name + '*') if f.is_file()]
 
 
 def enclosing_directory(path: str):
@@ -214,3 +214,41 @@ def enclosing_directory(path: str):
   """
 
   return os.path.basename(os.path.dirname(path))
+
+def gen_xml(gamelist: Gamelist, mapping: dict) -> str:
+  """
+  # Generate XML
+  Generate the XML document string for the Gamelist object using a mapping dictionary for tag names.
+
+  TODO: Write a consistent docstring for gen_xml.
+
+  """
+  # Create the gamelist root node.
+  doc = XML.Document()
+  root = doc.createElement('gamelist')
+  doc.appendChild(root)
+
+  # Process all games in the gamelist.
+  for game in gamelist.games:
+    # Create the "game" child node under the gamelist.
+    child = doc.createElement('game')
+
+    # Go thorugh the mappoing dictionary passed to know what and how to populate the children.
+    for attr, tag in mapping.items():
+      value = getattr(game, attr, None)
+
+      # Only need to build the element/node if there is actually a value.
+      if value is not None:
+        # Convert lists to string
+        if isinstance(value, list):
+          value = ', '.join(value)
+
+        # Build the child text node and append to the element
+        child_element = doc.createElement(tag)
+        child_element.appendChild(doc.createTextNode(str(value)))
+        child.appendChild(child_element)
+
+    root.appendChild(child)
+
+  # Pass back the pretty XML document string.
+  return doc.toprettyxml(indent="\t", newl="\n")

@@ -52,6 +52,7 @@ class Game:
   | publisher             | MD_STRING            | ""                 | ENTER PUBLISHER                     |
   | players               | MD_STRING            | "unknown"          | ENTER NUMBER OF PLAYERS             |
   | genres                | MD_STRING            | ""                 | ENTER GAME GENRES                   |
+  | family                | MD_STRING            | ""                 | ENTER GAME FAMILY                   |
   | region                | MD_STRING            | ""                 | ENTER REGION                        |
   | language              | MD_STRING            | ""                 | THIS GAME'S LANGUAGES               |
   | playcount             | MD_INT               | "0"                | ENTER NUMBER OF TIMES PLAYED        |
@@ -94,8 +95,8 @@ class Game:
 
   """
 
-  path: str
   name: str
+  path: str
   sortname: Optional[str] = None
   collectionSortName: Optional[str] = None
   description: Optional[str] = None
@@ -105,6 +106,7 @@ class Game:
   publisher: Optional[str] = field(default='unknown')
   players: Optional[str] = field(default='unknown')
   genres: Optional[List[str]] = None
+  family: Optional[str] = None
   region: Optional[str] = None
   language: Optional[str] = None
   playcount: Optional[int] = field(default=0)
@@ -158,8 +160,12 @@ class Game:
     if not isinstance(other, Game):
       return False
 
+    # Determine the values to compare based on whether sortname is set.
+    self_value = self.sortname if self.sortname else self.name
+    other_value = other.sortname if other.sortname else other.name
+
     return (
-      self.name == other.name and self.releasedate == other.releasedate and self.path == other.path
+      self_value == other_value and self.releasedate == other.releasedate and self.path == other.path
     )
 
   def __lt__(self, other: 'Game') -> bool:
@@ -167,8 +173,12 @@ class Game:
     if not isinstance(other, Game):
       return NotImplemented
 
-    if self.name != other.name:
-      return self.name < other.name
+    # Determine the values to compare based on whether sortname is set.
+    self_value = self.sortname if self.sortname else self.name
+    other_value = other.sortname if other.sortname else other.name
+
+    if self_value != other_value:
+      return self_value < other_value
 
     return self.releasedate < other.releasedate
 
@@ -177,8 +187,12 @@ class Game:
     if not isinstance(other, Game):
       return False
 
-    if self.name != other.name:
-      return self.name <= other.name
+    # Determine the values to compare based on whether sortname is set.
+    self_value = self.sortname if self.sortname else self.name
+    other_value = other.sortname if other.sortname else other.name
+
+    if self_value != other_value:
+      return self_value <= other_value
 
     return self.releasedate <= other.releasedate
 
@@ -187,8 +201,12 @@ class Game:
     if not isinstance(other, Game):
       return NotImplemented
 
-    if self.name != other.name:
-      return self.name > other.name
+    # Determine the values to compare based on whether sortname is set.
+    self_value = self.sortname if self.sortname else self.name
+    other_value = other.sortname if other.sortname else other.name
+
+    if self_value != other_value:
+      return self_value > other_value
 
     return self.releasedate > other.releasedate
 
@@ -197,8 +215,12 @@ class Game:
     if not isinstance(other, Game):
       return False
 
-    if self.name != other.name:
-      return self.name >= other.name
+    # Determine the values to compare based on whether sortname is set.
+    self_value = self.sortname if self.sortname else self.name
+    other_value = other.sortname if other.sortname else other.name
+
+    if self_value != other_value:
+      return self_value >= other_value
 
     return self.releasedate >= other.releasedate
 
@@ -249,6 +271,41 @@ class Gamelist:
   def sorted(self) -> List[Game]:
     """Return a sorted list of games in this Gamelist."""
     return sorted(self.games)
+
+  def __eq__(self, other: 'Gamelist') -> bool:
+    """Return equality based on system."""
+    if not isinstance(other, Gamelist):
+      return False
+
+    return self.system == other.system
+
+  def __lt__(self, other: 'Gamelist') -> bool:
+    """Return if the current game is less than another by system."""
+    if not isinstance(other, Gamelist):
+      return NotImplemented
+
+    return self.system < other.system
+
+  def __le__(self, other: 'Gamelist') -> bool:
+    """Reutrn if the current game is less than or equal to another system."""
+    if not isinstance(other, Gamelist):
+      return False
+
+    return self.system <= other.system
+
+  def __gt__(self, other: 'Gamelist') -> bool:
+    """Return if the current game is greater than another by system."""
+    if not isinstance(other, Gamelist):
+      return NotImplemented
+
+    return self.system > other.system
+
+  def __ge__(self, other: 'Gamelist') -> bool:
+    """Return if the current gamelsit is greater than or equal to another by system."""
+    if not isinstance(other, Gamelist):
+      return False
+
+    return self.system >= other.system
 
 
 @dataclass(slots=True)

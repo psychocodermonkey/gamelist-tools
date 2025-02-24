@@ -51,6 +51,7 @@ def return_mapping(invert: bool = False) -> dict:
   """
 
   ELEMENT_MAPPING = {
+    'path': 'path',
     'name': 'name',
     'sortname': 'sortname',
     'collectionSortName': 'collectionsortname',
@@ -77,7 +78,7 @@ def return_mapping(invert: bool = False) -> dict:
   }
 
   # Return the ELEMENT_MAPPING dictionary based on the way invert is set.
-  return ELEMENT_MAPPING if invert else {value: key for key, value in ELEMENT_MAPPING.items()}
+  return ELEMENT_MAPPING if not invert else {value: key for key, value in ELEMENT_MAPPING.items()}
 
 
 def parse_gamelist_data(esde_path: str) -> list[Gamelist]:

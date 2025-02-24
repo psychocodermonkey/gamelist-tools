@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 """
  Program: Tools for handling Emulation Station Gamelists
-    Name: Andrew Dixon            File: EmulationStation.py
+    Name: Andrew Dixon            File: Batocera.py
     Date: 23 Feb 2025
    Notes:
 

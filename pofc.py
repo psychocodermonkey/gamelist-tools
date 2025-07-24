@@ -102,6 +102,7 @@ def main(path: str) -> None:
       # print(xml_str)
 
       # REGEX to match .chd in gamelist for converting to .m3u on sd cards.
+      #  <path>\.\/.*\(Disc 1\)\.chd<\/path>
 
       with open('output/' + gl.system + '.xml', 'w') as file:
         file.write(xml_str)

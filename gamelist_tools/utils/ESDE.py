@@ -50,6 +50,7 @@ def return_mapping(invert: bool = False) -> dict:
     |                 |           |       |   Value: Object Attribute.                 |
   """
 
+  # ELEMENT_MAPPING is a dictionary of Game object properties to their corresponding XML node names.
   ELEMENT_MAPPING = {
     'path': 'path',
     'name': 'name',
@@ -210,33 +211,34 @@ def get_system_gamelist(path: str, media_directory: str) -> Gamelist:
   sys.games = []
 
   # Map all the fields from the XML to the field in the Game object
-  for game in raw_sys.gamelist.getElementsByTagName('game'):
+  for raw_game in raw_sys.gamelist.getElementsByTagName('game'):
     game = Game(
-      name=get_text(game, 'name'),
-      path=get_text(game, 'path'),
-      sortname=get_text(game, 'sortname'),
-      collectionSortName=get_text(game, 'collectionsortname'),
-      description=get_text(game, 'desc'),
-      rating=get_text(game, 'rating'),
-      releasedate=get_text(game, 'releasedate'),
-      developer=get_text(game, 'developer'),
-      publisher=get_text(game, 'publisher'),
-      genres=str(get_text(game, 'genre')).split(','),
-      players=get_text(game, 'players'),
-      favorite=get_text(game, 'favorite'),
-      completed=get_text(game, 'completed'),
-      kidgame=get_text(game, 'kidgame'),
-      hidden=get_text(game, 'hidden'),
-      broken=get_text(game, 'broken'),
-      nogamecount=get_text(game, 'nogamecount'),
-      nomultiscrape=get_text(game, 'nomultiscrape'),
-      hidemetadata=get_text(game, 'hidemetadata'),
-      playcount=get_text(game, 'playcount'),
-      controller=get_text(game, 'controller'),
-      altemulator=get_text(game, 'altemulator'),
-      lastplayed=get_text(game, 'lastplayed'),
+      name=get_text(raw_game, 'name'),
+      path=get_text(raw_game, 'path'),
+      sortname=get_text(raw_game, 'sortname'),
+      collectionSortName=get_text(raw_game, 'collectionsortname'),
+      description=get_text(raw_game, 'desc'),
+      rating=get_text(raw_game, 'rating'),
+      releasedate=get_text(raw_game, 'releasedate'),
+      developer=get_text(raw_game, 'developer'),
+      publisher=get_text(raw_game, 'publisher'),
+      genres=str(get_text(raw_game, 'genre')).split(','),
+      players=get_text(raw_game, 'players'),
+      favorite=get_text(raw_game, 'favorite'),
+      completed=get_text(raw_game, 'completed'),
+      kidgame=get_text(raw_game, 'kidgame'),
+      hidden=get_text(raw_game, 'hidden'),
+      broken=get_text(raw_game, 'broken'),
+      nogamecount=get_text(raw_game, 'nogamecount'),
+      nomultiscrape=get_text(raw_game, 'nomultiscrape'),
+      hidemetadata=get_text(raw_game, 'hidemetadata'),
+      playcount=get_text(raw_game, 'playcount'),
+      controller=get_text(raw_game, 'controller'),
+      altemulator=get_text(raw_game, 'altemulator'),
+      lastplayed=get_text(raw_game, 'lastplayed'),
     )
 
+    # TODO: Set media file path to be relative gamelist.xml path.
     # Get file name to look in media directory for specific system for scraped media.
     filename = os.path.splitext(os.path.basename(game.path))[0]
     media = find_files(filename, os.path.join(media_directory, sys.system))

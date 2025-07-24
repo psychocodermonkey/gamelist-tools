@@ -148,3 +148,5 @@ Icon?
 *_dev.txt
 *_dev.sql
 __exclude*/
+output/*
+!output/.gitkeep

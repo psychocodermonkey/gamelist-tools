@@ -215,17 +215,30 @@ def enclosing_directory(path: str):
 
   return os.path.basename(os.path.dirname(path))
 
-def gen_xml(gamelist: Gamelist, mapping: dict) -> str:
+def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') -> str:
   """
   # Generate XML
+
   Generate the XML document string for the Gamelist object using a mapping dictionary for tag names.
 
-  TODO: Write a consistent docstring for gen_xml.
+  ```python
+    gen_xml(gamelist, mapping) -> str
+  ```
+
+  ## Properties
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:----------------------------------------------------------------|
+  | gamelist        | Gamelist  | Gamelist object that holds all the data for the gameList.xml.   |
+  | mapping         | dict.     | Dictionary containing object -> XML tag mapping (inverted map)  |
+
+  TODO: Need to handle a way to control what the name of the root element is. This appears to be case sensitive.
 
   """
   # Create the gamelist root node.
   doc = XML.Document()
-  root = doc.createElement('gamelist')
+  # root = doc.createElement('gameList')
+  root = doc.createElement(rootElement)
   doc.appendChild(root)
 
   # Process all games in the gamelist.
@@ -252,3 +265,32 @@ def gen_xml(gamelist: Gamelist, mapping: dict) -> str:
 
   # Pass back the pretty XML document string.
   return doc.toprettyxml(indent="\t", newl="\n")
+
+
+def get_rel_path(path: str, depth: int) -> str:
+  """
+  # Get relative path
+
+  Return a path variable to aid in building relative paths based off of full path variables.
+
+  ```python
+    get_rel_path(path, depth) -> str
+  ```
+
+  ## Properties
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:----------------------------------------------------------------|
+  | path            | str       | Path to filesystem object to return the ending pieces.          |
+  | depth.          | int.      | How far up the path to traverse before stopping.                |
+
+  """
+  # Create a Path object from the string
+  path_object = Path(path)
+
+  # Get the parts of the path
+  if depth > len(path_object.parts):
+      return str(path_object)
+  else:
+      parts = list(path_object.parts)[-depth:]
+      return os.sep.join(parts)

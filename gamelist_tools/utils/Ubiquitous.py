@@ -215,6 +215,36 @@ def enclosing_directory(path: str):
 
   return os.path.basename(os.path.dirname(path))
 
+
+def get_rel_path(path: str, depth: int) -> str:
+  """
+  # Get relative path
+
+  Return a path variable to aid in building relative paths based off of full path variables.
+
+  ```python
+    get_rel_path(path, depth) -> str
+  ```
+
+  ## Properties
+
+  | Property        | Type      | Description |
+  |:----------------|:----------|:----------------------------------------------------------------|
+  | path            | str       | Path to filesystem object to return the ending pieces.          |
+  | depth.          | int       | How far up the path to traverse before stopping.                |
+
+  """
+  # Create a Path object from the string
+  path_object = Path(path)
+
+  # Get the parts of the path
+  if depth > len(path_object.parts):
+      return str(path_object)
+  else:
+      parts = list(path_object.parts)[-depth:]
+      return os.sep.join(parts)
+
+
 def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') -> str:
   """
   # Generate XML
@@ -230,7 +260,7 @@ def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') ->
   | Property        | Type      | Description |
   |:----------------|:----------|:----------------------------------------------------------------|
   | gamelist        | Gamelist  | Gamelist object that holds all the data for the gameList.xml.   |
-  | mapping         | dict.     | Dictionary containing object -> XML tag mapping (inverted map)  |
+  | mapping         | dict      | Dictionary containing object -> XML tag mapping (inverted map)  |
 
   TODO: Need to handle a way to control what the name of the root element is. This appears to be case sensitive.
 
@@ -264,33 +294,43 @@ def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') ->
     root.appendChild(child)
 
   # Pass back the pretty XML document string.
-  return doc.toprettyxml(indent="\t", newl="\n")
+  return doc.toprettyxml(indent='\t', newl='\n')
 
 
-def get_rel_path(path: str, depth: int) -> str:
+def gen_dir_gamelist(path: str, extension: str = None) -> Gamelist:
   """
-  # Get relative path
+  # Generate Gamelist for games in directory
 
-  Return a path variable to aid in building relative paths based off of full path variables.
+  Generate XML Gamelist for directory. Filter by extension if needed. Useful if scraping a directory
+  for games to then populate media or metadata to output a gamelist.xml.
 
   ```python
-    get_rel_path(path, depth) -> str
+    gen_dir_gamelist(path, ext) -> Gamelist
   ```
 
   ## Properties
 
   | Property        | Type      | Description |
   |:----------------|:----------|:----------------------------------------------------------------|
-  | path            | str       | Path to filesystem object to return the ending pieces.          |
-  | depth.          | int.      | How far up the path to traverse before stopping.                |
+  | path            | str       | String path to directory to to build gamelist off of.           |
+  | extension       | str       | File extension to limit build to.                               |
 
   """
-  # Create a Path object from the string
-  path_object = Path(path)
+  game_folder = Path(path)
 
-  # Get the parts of the path
-  if depth > len(path_object.parts):
-      return str(path_object)
-  else:
-      parts = list(path_object.parts)[-depth:]
-      return os.sep.join(parts)
+  gamelist = Gamelist(
+    path=path,
+    system=get_rel_path(path, 1),
+    xml_decl='<?xml version="1.0"?>'
+  )
+
+  for file in game_folder.iterdir():
+    if file.is_file() and (extension is None or file.suffix == extension):
+      game = Game(
+        name=os.path.splitext(os.path.basename(file))[0],
+        path=f'./{get_rel_path(file, 1)}'
+      )
+
+      gamelist.games.append(game)
+
+  return gamelist

@@ -107,7 +107,7 @@ def main(path: str) -> None:
       with open('output/' + gl.system + '.xml', 'w') as file:
         file.write(xml_str)
 
-    except:
+    except: #noqa E722 Do not use bare except:
       # exc_type, exc_value, exc_traceback = sys.exc_info()
       # # Print a generic message
       print(f'{gl.system} error processing gamelist!')

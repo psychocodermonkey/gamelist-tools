@@ -324,9 +324,11 @@ def gen_dir_gamelist(path: str, extension: str = None) -> Gamelist:
     xml_decl='<?xml version="1.0"?>'
   )
 
+  # Process files in directory and build games from them for the gamelist.
   for file in game_folder.iterdir():
     if file.is_file() and (extension is None or file.suffix == extension):
       game = Game(
+        # TODO: Modify how we generate the name and drop articles in brackets and parentheses at the end of the name.
         name=os.path.splitext(os.path.basename(file))[0],
         path=f'./{get_rel_path(file, 1)}'
       )

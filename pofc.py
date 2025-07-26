@@ -18,6 +18,8 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
+# TODO: Write a pofc script to build gamelist from a directory and scan for images in dir to add to image on the list.
+
 # import traceback
 import argparse
 import time
@@ -104,6 +106,9 @@ def main(path: str) -> None:
       # REGEX to match .chd in gamelist for converting to .m3u on sd cards.
       #  <path>\.\/.*\(Disc 1\)\.chd<\/path>
 
+      # TODO: Update output to create dir for system and write gamelist.xml inside.
+      #         Handle if the dir exists or not. overwrite gamelist.
+      #         This could endup in Ubiquitious.py as output functionality..
       with open('output/' + gl.system + '.xml', 'w') as file:
         file.write(xml_str)
 

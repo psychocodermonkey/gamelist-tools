@@ -64,7 +64,7 @@ Some metadata is also marked as "statistic" - these are kept track of by ES and 
 
 List of currently planned features.
 
-- [ ] Add support for pointing to ES-DE install to find gamelist and media directories.
+- [x] Add support for pointing to ES-DE install to find gamelist and media directories.
 - [x] Add support for reading ES-DE config to find `downloaded_media` directory.
 - [ ] Add support for selecting what metadata should be added to the `gamelist.xml` files.
 - [ ] Add support for exporting to `Roms` directory for output and move data accordingly.
@@ -72,3 +72,4 @@ List of currently planned features.
 - [ ] Add support for mapping directory / system names for systems that use different conventions for system folder names.
 - [ ] Add support for adding sortname to appropriately sort games that have `The` as the first word.
 - [ ] Add support for creating a backup of the original `gamelist.xml` before making changes.
+- [ ] Write GUI front end to handle user input and working the application.

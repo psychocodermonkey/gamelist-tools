@@ -23,6 +23,7 @@
 # import traceback
 import argparse
 import time
+from pathlib import Path
 from gamelist_tools import ESDE
 
 # from gamelist_tools import Batocera
@@ -106,10 +107,12 @@ def main(path: str) -> None:
       # REGEX to match .chd in gamelist for converting to .m3u on sd cards.
       #  <path>\.\/.*\(Disc 1\)\.chd<\/path>
 
-      # TODO: Update output to create dir for system and write gamelist.xml inside.
-      #         Handle if the dir exists or not. overwrite gamelist.
-      #         This could endup in Ubiquitious.py as output functionality..
-      with open('output/' + gl.system + '.xml', 'w') as file:
+      # Check if our output directory exists, if not create it.
+      output_dir = Path(f'output/{gl.system}')
+      if not output_dir.exists():
+        output_dir.mkdir()
+
+      with open(f'{output_dir.resolve()}/gamelist.xml', 'w') as file:
         file.write(xml_str)
 
     except: #noqa E722 Do not use bare except:

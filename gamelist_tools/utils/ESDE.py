@@ -100,7 +100,7 @@ def parse_gamelist_data(esde_path: str) -> list[Gamelist]:
   """
 
   settings = get_settings(esde_path)
-  media_directory = settings['MediaDirectory']
+  media_directory = settings['MediaDirectory'] if settings['MediaDirectory'] else os.path.join(esde_path, 'downloaded_media')
   gamelist_directory = os.path.join(esde_path, 'gamelists')
 
   imported_data = []

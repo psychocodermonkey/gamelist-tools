@@ -20,7 +20,7 @@
 
 # TODO: Write a pofc script to build gamelist from a directory and scan for images in dir to add to image on the list.
 
-# import traceback
+import traceback
 import argparse
 import time
 from pathlib import Path
@@ -46,17 +46,15 @@ def main(path: str) -> None:
   TEST = ESDE.parse_gamelist_data(path)
   end_time = time.perf_counter()
 
+  # Sort the gamelists
   TEST = sorted(TEST)
 
-  for sys in TEST:
-    print(f'------ {sys.system} - # Games: {len(sys.games)} ------')
-
-  print(f'Gamelist file processing time: {end_time - start_time} seconds\n')
-
-  # gl = TEST[0]
+  # Process all gamelists and output them to a directory.
   for gl in TEST:
     try:
+
       gl.sort()
+      print(f'------ {gl.system} - # Games: {len(gl.games)} ------')
 
       for i, game in enumerate(gl.games):
         game.video = None
@@ -84,7 +82,6 @@ def main(path: str) -> None:
           if value:
             value = './images/' + get_rel_path(value, 2)
             setattr(game, tag, value)
-
 
         if not game.image:
           game.image = game.miximage
@@ -115,21 +112,14 @@ def main(path: str) -> None:
       with open(f'{output_dir.resolve()}/gamelist.xml', 'w') as file:
         file.write(xml_str)
 
-    except: #noqa E722 Do not use bare except:
-      # exc_type, exc_value, exc_traceback = sys.exc_info()
-      # # Print a generic message
-      print(f'{gl.system} error processing gamelist!')
+    except Exception as e: #noqa E722 Do not use bare except:
+      print(f'Error processing :: {gl.system} :: gamelist!')
+      print(f"Error Type: {type(e).__name__}")
+      print(f"Error Value: {e}")
+      print("\n--- Full Traceback ---")
+      print(traceback.format_exc())
 
-      # # Print the exception type and value
-      # print(f"Error Type: {exc_type.__name__}")
-      # print(f"Error Value: {exc_value}")
-
-      # # Print the full traceback
-      # print("\n--- Full Traceback ---")
-      # # traceback.print_exc() # Prints the traceback to stderr by default
-      # # Alternatively, to get the traceback as a string:
-      # traceback_str = traceback.format_exc()
-      # print(traceback_str)
+  print(f'Gamelist file processing time: {end_time - start_time} seconds\n')
 
 
 # If the pofc.py is run (instead of imported as a module),

@@ -180,7 +180,11 @@ class Game:
     if self_value != other_value:
       return self_value < other_value
 
-    return self.releasedate < other.releasedate
+    elif self.releasedate and other.releasedate:
+      return self.releasedate < other.releasedate
+
+    else:
+      return False
 
   def __le__(self, other: 'Game') -> bool:
     """Reutrn if the current game is less than or equal to another by name and release date."""
@@ -194,7 +198,11 @@ class Game:
     if self_value != other_value:
       return self_value <= other_value
 
-    return self.releasedate <= other.releasedate
+    elif self.releasedate and other.releasedate:
+      return self.releasedate <= other.releasedate
+
+    else:
+      return False
 
   def __gt__(self, other: 'Game') -> bool:
     """Return if the current game is greater than another by name and release date."""
@@ -208,7 +216,11 @@ class Game:
     if self_value != other_value:
       return self_value > other_value
 
-    return self.releasedate > other.releasedate
+    elif self.releasedate and other.releasedate:
+      return self.releasedate > other.releasedate
+
+    else:
+      return False
 
   def __ge__(self, other: 'Game') -> bool:
     """Return if the current game is greater than or equal to another by name and release date."""
@@ -222,7 +234,11 @@ class Game:
     if self_value != other_value:
       return self_value >= other_value
 
-    return self.releasedate >= other.releasedate
+    elif self.releasedate and other.releasedate:
+      return self.releasedate >= other.releasedate
+
+    else:
+      return False
 
 
 @dataclass(slots=True)

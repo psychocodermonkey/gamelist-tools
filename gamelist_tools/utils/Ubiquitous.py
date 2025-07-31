@@ -192,17 +192,8 @@ def find_files(name: str, path: str) -> list[str]:
   """
 
   # TODO: Look into if this should or should not be case insensitive.
-  # Escape brackets in the string so we can find files with brackets in the name.
-  # name = name.replace('[', r'[[]').replace(']', r'[]]') + '*'
-  matches = [str(f) for f in Path(path).rglob(name + '*') if f.is_file()]
-
-  # If we don't get any matches, then see if the filename exists in the directory tree.
-  #   This is less performant than the above check but works if there are characters rglob
-  #.  doesn't lke. Only need to do this if we didn't get hits.
-  if not matches:
-    matches = [str(f) for f in Path(path).rglob('*') if f.is_file() and name in f.name]
-
-  return matches
+  name = name.replace('[', r'?').replace(']', r'?') + '*'
+  return [str(f) for f in Path(path).rglob(name + '*') if f.is_file()]
 
 
 def enclosing_directory(path: str):

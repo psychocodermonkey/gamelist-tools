@@ -19,7 +19,9 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
+import os
 import xml.dom.minidom as XML
+from pathlib import Path
 from datetime import datetime
 from typing import List, Optional
 from dataclasses import dataclass, field
@@ -240,6 +242,80 @@ class Game:
     else:
       return False
 
+  def set_rel_paths(self, depth: int = 2, prepend: str = None, exclude: list[str] = None) -> None:
+    """
+    # Set relative paths for all paths in object.
+
+    Set a relative path defined by depth from root of directory. Prepend a directory if passed
+    and omit items in the exclusion list. Game PATH is omitted from this. That path should be
+    handled independently of what is usually just image data.
+
+    ```python
+      Game.set_rel_paths(depth, prepend, exclude):
+    ```
+
+    ## Properties
+
+    | Property        | Type      | Description |
+    |:----------------|:----------|:----------------------------------------------------------------|
+    | depth           | int       | How far up the path to traverse before stopping.                |
+    | prepend         | str       | Directory name to prepend to the path.                          |
+    | exclude         | list[str] | List of properties to exclude from path shortening.             |
+
+    """
+
+    # Update paths for images to relative paths inside the system directory.
+    paths = [
+      'miximage',
+      'marquee',
+      'boxfront',
+      'boxback',
+      'box3d',
+      'cartridge',
+      'titleshot',
+      'thumbnail',
+      'manual',
+      'video',
+      'gamemap',
+      'bezel',
+      'fanart',
+      'magazine',
+    ]
+
+    # Remove the excluded entries.
+    if exclude:
+      paths = [item for item in paths if item not in exclude]
+
+    # Get each value for the property that should be a path.
+    for tag in paths:
+      value = getattr(self, tag)
+      if value:
+
+        path_object = Path(value)
+
+        # Determine what the base portion of the path before any prepending.
+        if depth > len(path_object.parts):
+          value = str(path_object)
+        else:
+          parts = list(path_object.parts)[-depth:]
+          value = os.sep.join(parts)
+
+        if prepend:
+          prepend = prepend.strip()
+
+          if not prepend.endswith(os.sep):
+            prepend += os.sep
+
+          if not prepend.startswith(f'.{os.sep}'):
+            prepend = f'.{os.sep}' + prepend
+
+          value = prepend + value
+
+        elif not value.startswith(f'.{os.sep}'):
+          value = f'.{os.sep}{value}'
+
+        setattr(self, tag, value)
+
 
 @dataclass(slots=True)
 class Gamelist:
@@ -322,6 +398,30 @@ class Gamelist:
       return False
 
     return self.system >= other.system
+
+  def set_rel_paths(self, depth: int = 2, prepend: str = None, exclude: list[str] = None) -> None:
+    """
+    # Set relative paths for all paths in object.
+
+    For all games in game list. Set a relative path defined by depth from root of directory. Prepend
+    a directory if passed and omit items in the exclusion list.
+
+    ```python
+      Gamelist.set_rel_paths(depth, prepend, exclude):
+    ```
+
+    ## Properties
+
+    | Property        | Type      | Description |
+    |:----------------|:----------|:----------------------------------------------------------------|
+    | depth           | int       | How far up the path to traverse before stopping.                |
+    | prepend         | str       | Directory name to prepend to the path.                          |
+    | exclude         | list[str] | List of properties to exclude from path shortening.             |
+
+    """
+
+    for game in self.games:
+      game.set_rel_paths(depth, prepend, exclude)
 
 
 @dataclass(slots=True)

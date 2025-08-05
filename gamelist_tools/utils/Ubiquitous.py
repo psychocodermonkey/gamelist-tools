@@ -22,7 +22,8 @@ import os
 import re
 import xml.dom.minidom as XML
 from pathlib import Path
-from ..models.Gamelist import RawGamelist, Gamelist, Game
+# from ..models.Gamelist import RawGamelist, Gamelist, Game
+from gamelist_tools.models.Gamelist import RawGamelist, Gamelist, Game
 
 
 def find_lists(directory: str) -> list:

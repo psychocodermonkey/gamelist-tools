@@ -28,60 +28,41 @@ from gamelist_tools import ESDE
 
 # from gamelist_tools import Batocera
 from gamelist_tools import EmulationStation
-from gamelist_tools.utils.Ubiquitous import gen_xml, get_rel_path
+from gamelist_tools.utils.Ubiquitous import gen_xml
 
 
 PATH = ''
-TEST = ''
+GAMELIST_DATA = ''
 
 
 def main(path: str) -> None:
   """
   Main
   """
-  global TEST
+  global GAMELIST_DATA
 
   start_time = time.perf_counter()
-  print('Starting gamelist processing...')
-  TEST = ESDE.parse_gamelist_data(path)
+  print('\n[+] Starting gamelist processing...\n[+] Importing ES-DE game collection data...')
+  GAMELIST_DATA = ESDE.parse_gamelist_data(path)
   end_time = time.perf_counter()
 
   # Sort the gamelists
-  TEST = sorted(TEST)
+  GAMELIST_DATA = sorted(GAMELIST_DATA)
 
   # Process all gamelists and output them to a directory.
-  for gl in TEST:
+  for gl in GAMELIST_DATA:
     try:
 
+      # Sort the games in the gamelist.
       gl.sort()
+
+      # Set relative paths and prefix with a "images" directory.
+      gl.set_rel_paths(prepend='images')
+
       print(f'------ {gl.system} - # Games: {len(gl.games)} ------')
 
+      # Move images around on the object to set what we want showing up for other tags.
       for i, game in enumerate(gl.games):
-        game.video = None
-
-        # Update paths for images to relative paths inside the system directory.
-        image_tags = [
-          'miximage',
-          'marquee',
-          'boxfront',
-          'boxback',
-          'box3d',
-          'cartridge',
-          'titleshot',
-          'thumbnail',
-          'manual',
-          'video',
-          'gamemap',
-          'bezel',
-          'fanart',
-          'magazine',
-        ]
-
-        for tag in image_tags:
-          value = getattr(game, tag)
-          if value:
-            value = './images/' + get_rel_path(value, 2)
-            setattr(game, tag, value)
 
         if not game.image:
           game.image = game.miximage

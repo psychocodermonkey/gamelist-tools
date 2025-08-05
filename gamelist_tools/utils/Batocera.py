@@ -30,11 +30,12 @@ from gamelist_tools.utils.Ubiquitous import get_gamelist_data, parse_value
 def return_mapping(invert: bool = False) -> dict:
   """
     # Return Property mapping dictionary
-    Map Gamelist object property to XML tag for ES-DE
 
-  ```python
-  return_mapping(invert: bool = False) -> dict
-  ```
+    ```python
+      return_mapping(invert: bool = False) -> dict
+    ```
+
+    Map Gamelist object property to XML tag for ES-DE
 
   # Properties
 

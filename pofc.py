@@ -25,10 +25,9 @@ import argparse
 import time
 from pathlib import Path
 from gamelist_tools import ESDE
-
 # from gamelist_tools import Batocera
 from gamelist_tools import EmulationStation
-from gamelist_tools.utils.Ubiquitous import gen_xml
+from gamelist_tools.utils.Ubiquitous import gen_xml, output_gamelist
 
 
 PATH = ''
@@ -79,19 +78,14 @@ def main(path: str) -> None:
 
       # doc = gen_xml(gl, Batocera_mapping)
       doc = gen_xml(gl, EmulationStation_mapping)
-      xml_str = doc
       # print(xml_str)
 
       # REGEX to match .chd in gamelist for converting to .m3u on sd cards.
       #  <path>\.\/.*\(Disc 1\)\.chd<\/path>
 
-      # Check if our output directory exists, if not create it.
+      # Generate what the output directory needs to be based off system name and generate the gamelist.
       output_dir = Path(f'output/{gl.system}')
-      if not output_dir.exists():
-        output_dir.mkdir()
-
-      with open(f'{output_dir.resolve()}/gamelist.xml', 'w') as file:
-        file.write(xml_str)
+      output_gamelist(doc, output_dir)
 
     except Exception as e: #noqa E722 Do not use bare except:
       print(f'Error processing :: {gl.system} :: gamelist!')
@@ -112,7 +106,7 @@ if __name__ == '__main__':
   parser.add_argument(
     '--path',
     '-p',
-    default='__exclude/data/RoamData/ES-DE',
+    default='ES-DE/',
     required=False,
     help='Specify the path to the ES-DE directory.',
   )

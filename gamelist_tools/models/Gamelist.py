@@ -32,9 +32,9 @@ class Game:
   """
   # Game
 
-  ```python
-    Game(path: str, name: str)
-  ```
+    ```python
+      Game(path: str, name: str)
+    ```
 
   This class contains a field for all possibilites in gamelist.xml files.
   It is intended to be universial accross all implementations to allow for conversion between implementations.
@@ -246,13 +246,13 @@ class Game:
     """
     # Set relative paths for all paths in object.
 
+      ```python
+        Game.set_rel_paths(depth, prepend, exclude):
+      ```
+
     Set a relative path defined by depth from root of directory. Prepend a directory if passed
     and omit items in the exclusion list. Game PATH is omitted from this. That path should be
     handled independently of what is usually just image data.
-
-    ```python
-      Game.set_rel_paths(depth, prepend, exclude):
-    ```
 
     ## Properties
 
@@ -322,9 +322,9 @@ class Gamelist:
   """
   # Gamelist
 
-  ```python
-    Gamelist(path: str, system: str, games: List[Game])
-  ```
+    ```python
+      Gamelist(path: str, system: str, games: List[Game])
+    ```
 
   ## Properties
 
@@ -403,12 +403,12 @@ class Gamelist:
     """
     # Set relative paths for all paths in object.
 
+      ```python
+        Gamelist.set_rel_paths(depth, prepend, exclude):
+      ```
+
     For all games in game list. Set a relative path defined by depth from root of directory. Prepend
     a directory if passed and omit items in the exclusion list.
-
-    ```python
-      Gamelist.set_rel_paths(depth, prepend, exclude):
-    ```
 
     ## Properties
 
@@ -429,9 +429,10 @@ class RawGamelist:
   """
   # RawGamelist
 
-  ```python
-    RawGameList(path: str, system: Optional[str], xml_decl: Optional[str], gamelist: Optional[XML.Element])
-  ```
+    ```python
+      RawGameList(path: str, system: Optional[str], xml_decl: Optional[str], gamelist: Optional[XML.Element])
+    ```
+
   This class is used to hold the raw data from a gamelist file, including its path and system name.
 
   ## Properties

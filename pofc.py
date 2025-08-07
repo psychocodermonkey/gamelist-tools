@@ -20,6 +20,7 @@
 
 # TODO: Write a pofc script to build gamelist from a directory and scan for images in dir to add to image on the list.
 
+import os
 import traceback
 import argparse
 import time
@@ -30,8 +31,9 @@ from gamelist_tools import EmulationStation
 from gamelist_tools.utils.Ubiquitous import gen_xml, output_gamelist
 
 
-PATH = ''
-GAMELIST_DATA = ''
+PATH: str = ''
+OUTPUT: str = ''
+GAMELIST_DATA: str = ''
 
 
 def main(path: str) -> None:
@@ -84,7 +86,7 @@ def main(path: str) -> None:
       #  <path>\.\/.*\(Disc 1\)\.chd<\/path>
 
       # Generate what the output directory needs to be based off system name and generate the gamelist.
-      output_dir = Path(f'output/{gl.system}')
+      output_dir = Path(f'{OUTPUT}{gl.system}')
       output_gamelist(doc, output_dir)
 
     except Exception as e: #noqa E722 Do not use bare except:
@@ -106,13 +108,20 @@ if __name__ == '__main__':
   parser.add_argument(
     '--path',
     '-p',
-    default='ES-DE/',
-    required=False,
+    required=True,
     help='Specify the path to the ES-DE directory.',
+  )
+
+  parser.add_argument(
+    '--output',
+    '-o',
+    default='output/',
+    required=False,
+    help='Specify the output directory for the processed gamelist files.',
   )
 
   args = parser.parse_args()
   PATH = args.path
+  OUTPUT = f'{os.path.normpath(args.output)}/'
 
-  # Register the function to execute on ending the script
   main(PATH)

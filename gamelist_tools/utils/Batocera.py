@@ -31,11 +31,11 @@ def return_mapping(invert: bool = False) -> dict:
   """
     # Return Property mapping dictionary
 
-    ```python
-      return_mapping(invert: bool = False) -> dict
-    ```
+    Map Gamelist object property to XML tag for ES-DE.
 
-    Map Gamelist object property to XML tag for ES-DE
+    ```python
+    return_mapping(invert: bool = False) -> dict
+    ```
 
   # Properties
 
@@ -104,6 +104,10 @@ def parse_gamelist_data(path: str) -> list[Gamelist]:
   scraped media. the ```gamelist.xml``` files are stored in a default location within the ES-DE
   directory, so no direct path is taken to point this at a specific directory.
 
+  ```python
+  parse_gamelist_data(path: str) -> list[Gamelist]
+  ```
+
   ## Properties
 
   | Property        | Type      | Description |
@@ -136,7 +140,7 @@ def get_system_gamelist(path: str, media_directory: str) -> Gamelist:
   Returns a Gamelist object containing Game objects parsed from the gamelist.xml file.
 
   ```python
-    get_system_gamelist(path: str, media_directory: str) -> Gamelist
+  get_system_gamelist(path: str, media_directory: str) -> Gamelist
   ```
 
   ## Properties

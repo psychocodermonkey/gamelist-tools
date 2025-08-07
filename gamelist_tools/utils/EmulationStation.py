@@ -31,11 +31,11 @@ def return_mapping(invert: bool = False) -> dict:
   """
     # Return Property mapping dictionary
 
-    ```python
-      eturn_mapping(invert: bool = False) -> dict
-    ```
+    Map Gamelist object property to XML tag for ES-DE.
 
-    Map Gamelist object property to XML tag for ES-DE
+    ```python
+    eturn_mapping(invert: bool = False) -> dict
+    ```
 
   # Properties
 

@@ -30,12 +30,12 @@ def find_lists(directory: str) -> list:
   """
   # Find gamelist XML files
 
-    ```python
-      find_lists(directory: str) -> dict:
-    ```
-
   Recursively search through the directory structure looking for 'gamelist.xml' files.
   Returns a list of paths to these files.
+
+  ```python
+  find_lists(directory: str) -> dict
+  ```
 
   ## Properties
 
@@ -69,12 +69,12 @@ def get_gamelist_data(path: str) -> RawGamelist:
   """
   # Get Gamelist Data
 
-    ```python
-      Gamelist.get_gamelist_data(path: str) -> RawGamelist
-    ```
-
   Reads the gamelist file and returns a RawGamelist object containing the path, system, and XML gamelist data as
   a ```xml.dom.minidom.Element```.
+
+  ```python
+  Gamelist.get_gamelist_data(path: str) -> RawGamelist
+  ```
 
   ## Properties
 
@@ -115,12 +115,12 @@ def output_gamelist(doc: str, path: Path) -> None:
   """
   # Output gamelist XML files
 
-    ```python
-      output_gamelist(doc: str, path: str) -> None
-    ```
-
   Output the gamelist.xml file in XML format with proper indentation and encoding for all frontends.
   The full directory structure is created as necessary.
+
+  ```python
+  output_gamelist(doc: str, path: str) -> None
+  ```
 
   ## Properties
 
@@ -134,6 +134,8 @@ def output_gamelist(doc: str, path: Path) -> None:
   # Normalize and validate the output path.
   os.path.abspath(path)
   os.makedirs(path, exist_ok=True)
+
+  # Write the gamelist.xml file to the directory.
   with open(f'{path.resolve()}/gamelist.xml', 'w') as file:
     file.write(doc)
 
@@ -144,9 +146,9 @@ def parse_value(value_type: str, value: str) -> (bool | int | str):
 
   Convert XML string values to appropriate Python types.
 
-    ```python
-      parse_value(value_type: str, value)  -> (bool | int | str)
-    ```
+  ```python
+  parse_value(value_type: str, value)  -> (bool | int | str)
+  ```
 
   ## Properties
 
@@ -173,11 +175,11 @@ def get_text(node: XML.Element, value: str) -> str:
   """
   # Get text from XML Node
 
-    ```python
-      get_text(node: xml.dom.minidom.Element, tag: str) - str
-    ```
-
   Return the value for a given XML node name.
+
+  ```python
+  get_text(node: xml.dom.minidom.Element, tag: str) - str
+  ```
 
   ## Properties
 
@@ -196,11 +198,11 @@ def find_files(name: str, path: str) -> list[str]:
   """
   # Find files matching by name in path recursively
 
-    ```python
-      find_files(name: str, path: str) -> list[str]
-    ```
-
   Find all files in a tree that match a file name. Filename is wild carded from beginning of filename.
+
+  ```python
+  find_files(name: str, path: str) -> list[str]
+  ```
 
   ## Properties
 
@@ -220,12 +222,11 @@ def enclosing_directory(path: str):
   """
   # Return Enclosing directory for a file system object.
 
-    ```python
-      enclosing_directory(path: str) -> str
-    ```
-
   File system object can be a direcotry or file, so long as it can be pointed to with a filesystem path.
 
+  ```python
+  enclosing_directory(path: str) -> str
+  ```
 
   ## Properties
 
@@ -242,11 +243,11 @@ def get_rel_path(path: str, depth: int) -> str:
   """
   # Get relative path
 
-    ```python
-      get_rel_path(path, depth) -> str
-    ```
-
   Return a path variable to aid in building relative paths based off of full path variables.
+
+  ```python
+  get_rel_path(path, depth) -> str
+  ```
 
   ## Properties
 
@@ -271,12 +272,11 @@ def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') ->
   """
   # Generate XML
 
-    ```python
-      gen_xml(gamelist, mapping) -> str
-    ```
-
   Generate the XML document string for the Gamelist object using a mapping dictionary for tag names.
 
+  ```python
+  gen_xml(gamelist, mapping) -> str
+  ```
 
   ## Properties
 
@@ -324,12 +324,12 @@ def gen_dir_gamelist(path: str, extension: str = None) -> Gamelist:
   """
   # Generate Gamelist for games in directory
 
-    ```python
-      gen_dir_gamelist(path, ext) -> Gamelist
-    ```
-
   Generate XML Gamelist for directory. Filter by extension if needed. Useful if scraping a directory
   for games to then populate media or metadata to output a gamelist.xml.
+
+  ```python
+  gen_dir_gamelist(path, ext) -> Gamelist
+  ```
 
   ## Properties
 

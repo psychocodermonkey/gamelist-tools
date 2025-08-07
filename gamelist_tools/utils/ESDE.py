@@ -33,11 +33,11 @@ def return_mapping(invert: bool = False) -> dict:
   """
     # Return Property mapping dictionary
 
-        ```python
-      return_mapping(invert: bool = False) -> dict
-    ```
+    Map Gamelist object property to XML tag for ES-DE.
 
-    Map Gamelist object property to XML tag for ES-DE
+    ```python
+    return_mapping(invert: bool = False) -> dict
+    ```
 
   # Properties
 
@@ -87,14 +87,14 @@ def parse_gamelist_data(esde_path: str) -> list[Gamelist]:
   """
   # Process all gamelist files for ES-DE
 
-    ```python
-      parse_gamelist_data(esde_path: str) -> list[Gamelist]
-    ```
-
   Process all gamelist files in user directory for ES-DE. Searches for es_settings.xml file to
   fetch what the configured downloaded_media directory is in order to populate the path to the
   scraped media. the ```gamelist.xml``` files are stored in a default location within the ES-DE
   directory, so no direct path is taken to point this at a specific directory.
+
+  ```python
+  parse_gamelist_data(esde_path: str) -> list[Gamelist]
+  ```
 
   ## Properties
 
@@ -125,12 +125,11 @@ def get_settings(path: str) -> dict:
   """
   # Get ES-DE settings from XML file
 
-    ```python
-      get_esde_settings(path: str) -> dict:
-    ```
-
   Get and process the settings file from the ES-DE user directory.
 
+  ```python
+  get_esde_settings(path: str) -> dict
+  ```
 
   ## Properties
 
@@ -171,13 +170,12 @@ def get_system_gamelist(path: str, media_directory: str) -> Gamelist:
   """
   # Build a Gamelist object containing Game objects parsed from a given gamelist.xml file.
 
-    ```python
-      get_system_gamelist(path: str, media_directory: str) -> Gamelist
-    ```
-
   Accepts the path to the gamelist.xml file and the media directory for the system.
   Returns a Gamelist object containing Game objects parsed from the gamelist.xml file.
 
+  ```python
+  get_system_gamelist(path: str, media_directory: str) -> Gamelist
+  ```
 
   ## Properties
 

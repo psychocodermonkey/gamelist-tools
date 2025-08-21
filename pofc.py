@@ -31,12 +31,12 @@ from gamelist_tools import EmulationStation
 from gamelist_tools.utils.Ubiquitous import gen_xml, output_gamelist
 
 
-PATH: str = ''
-OUTPUT: str = ''
-GAMELIST_DATA: str = ''
+# PATH: str = ''
+# OUTPUT: str = ''
+GAMELIST_DATA: list = []
 
 
-def main(path: str) -> None:
+def main(path: str, output: str) -> None:
   """
   Main
   """
@@ -66,7 +66,8 @@ def main(path: str) -> None:
       for i, game in enumerate(gl.games):
 
         if not game.image:
-          game.image = game.miximage
+          game.image = game.miximage if game.miximage else game.thumbnail
+          # game.image = game.thumbnail if game.thumbnail else game.titleshot
 
         if not game.thumbnail:
           game.thumbnail = game.boxfront
@@ -86,7 +87,7 @@ def main(path: str) -> None:
       #  <path>\.\/.*\(Disc 1\)\.chd<\/path>
 
       # Generate what the output directory needs to be based off system name and generate the gamelist.
-      output_dir = Path(f'{OUTPUT}{gl.system}')
+      output_dir = Path(f'{output}{gl.system}')
       output_gamelist(doc, output_dir)
 
     except Exception as e: #noqa E722 Do not use bare except:
@@ -124,4 +125,4 @@ if __name__ == '__main__':
   PATH = args.path
   OUTPUT = f'{os.path.normpath(args.output)}/'
 
-  main(PATH)
+  main(PATH, OUTPUT)

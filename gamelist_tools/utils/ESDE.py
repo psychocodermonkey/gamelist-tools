@@ -22,12 +22,14 @@
 import os
 import re
 import xml.dom.minidom as XML
+# from concurrent.futures import ThreadPoolExecutor, as_completed
 from gamelist_tools.models.Gamelist import Gamelist, Game
 from gamelist_tools.utils.Ubiquitous import find_lists, find_files, enclosing_directory, get_text
 from gamelist_tools.utils.Ubiquitous import get_gamelist_data, parse_value
 
 
 # TODO: Methods specific to bringing in and interpreting ES-DE gamelist data.
+
 
 def return_mapping(invert: bool = False) -> dict:
   """
@@ -105,12 +107,37 @@ def parse_gamelist_data(esde_path: str) -> list[Gamelist]:
   """
 
   settings = get_settings(esde_path)
-  media_directory = settings['MediaDirectory'] if settings['MediaDirectory'] else os.path.join(esde_path, 'downloaded_media')
+
+  media_directory = (
+    settings['MediaDirectory']
+    if settings['MediaDirectory']
+    else os.path.join(esde_path, 'downloaded_media')
+  )
+
   gamelist_directory = os.path.join(esde_path, 'gamelists')
 
   imported_data = []
   # Find the gamelists to import information from
   game_lists = find_lists(gamelist_directory)
+
+  # Use ThreadPoolExecutor to parse gamelists in parallel
+  # with ThreadPoolExecutor() as executor:
+  #   futures = {
+  #     executor.submit(
+  #       get_system_gamelist,
+  #       game_list['path'],
+  #       media_directory
+  #     ): game_list
+
+  #     for game_list in game_lists
+  #   }
+
+  #   for future in as_completed(futures):
+  #     try:
+  #       system = future.result()
+  #       imported_data.append(system)
+  #     except Exception as e:
+  #       print(f'An error occurred while processing a gamelist: {e}')
 
   # Build a gamelist for each system
   for game_list in game_lists:
@@ -155,8 +182,8 @@ def get_settings(path: str) -> dict:
     doc = XML.parseString(parsed)
 
     # Look for all of the children that have a name and value to be stored in the dictionary.
-    for node in doc.getElementsByTagName("*"):
-      if node.hasAttribute("name"):
+    for node in doc.getElementsByTagName('*'):
+      if node.hasAttribute('name'):
         # settings[node.getAttribute('name')] = node.getAttribute('value')
         name = node.getAttribute('name')
         value = node.getAttribute('value')

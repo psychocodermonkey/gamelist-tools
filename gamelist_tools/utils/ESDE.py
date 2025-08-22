@@ -28,9 +28,6 @@ from gamelist_tools.utils.Ubiquitous import find_lists, find_files, enclosing_di
 from gamelist_tools.utils.Ubiquitous import get_gamelist_data, parse_value
 
 
-# TODO: Methods specific to bringing in and interpreting ES-DE gamelist data.
-
-
 def return_mapping(invert: bool = False) -> dict:
   """
     # Return Property mapping dictionary

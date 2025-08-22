@@ -19,12 +19,12 @@
 ........1.........2.........3.........4.........5.........6.........7.........8.........9.........0.........1.........2.........3..
 """
 
-import os
-import re
-import xml.dom.minidom as XML
-from gamelist_tools.models.Gamelist import Gamelist, Game
-from gamelist_tools.utils.Ubiquitous import find_lists, find_files, enclosing_directory, get_text
-from gamelist_tools.utils.Ubiquitous import get_gamelist_data, parse_value
+# import os
+# import re
+# import xml.dom.minidom as XML
+# from gamelist_tools.models.Gamelist import Gamelist, Game
+# from gamelist_tools.utils.Ubiquitous import find_lists, find_files, enclosing_directory, get_text
+# from gamelist_tools.utils.Ubiquitous import get_gamelist_data, parse_value
 
 
 def return_mapping(invert: bool = False) -> dict:

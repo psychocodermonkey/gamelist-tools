@@ -20,11 +20,11 @@
 """
 
 import os
-import re
-import xml.dom.minidom as XML
+# import re
+# import xml.dom.minidom as XML
 from gamelist_tools.models.Gamelist import Gamelist, Game
 from gamelist_tools.utils.Ubiquitous import find_lists, find_files, enclosing_directory, get_text
-from gamelist_tools.utils.Ubiquitous import get_gamelist_data, parse_value
+from gamelist_tools.utils.Ubiquitous import get_gamelist_data #, parse_value
 
 
 def return_mapping(invert: bool = False) -> dict:
@@ -94,6 +94,7 @@ def return_mapping(invert: bool = False) -> dict:
 
   # Return the ELEMENT_MAPPING dictionary based on the way invert is set.
   return ELEMENT_MAPPING if not invert else {value: key for key, value in ELEMENT_MAPPING.items()}
+
 
 def parse_gamelist_data(path: str) -> list[Gamelist]:
   """

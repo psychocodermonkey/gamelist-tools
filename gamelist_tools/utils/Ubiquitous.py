@@ -254,18 +254,19 @@ def get_rel_path(path: str, depth: int) -> str:
   | Property        | Type      | Description |
   |:----------------|:----------|:----------------------------------------------------------------|
   | path            | str       | Path to filesystem object to return the ending pieces.          |
-  | depth.          | int       | How far up the path to traverse before stopping.                |
+  | depth           | int       | How far up the path to traverse before stopping.                |
 
   """
-  # Create a Path object from the string
+
+  # Create a Path object from the string.
   path_object = Path(path)
 
-  # Get the parts of the path
-  if depth > len(path_object.parts):
-      return str(path_object)
-  else:
-      parts = list(path_object.parts)[-depth:]
-      return os.sep.join(parts)
+  # Return the trimmed down relative path based on depth asked for.
+  return (
+    os.sep.join(list(path_object.parts)[-depth:])
+    if depth <= len(path_object.parts)
+    else str(path_object)
+  )
 
 
 def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') -> str:
@@ -285,12 +286,10 @@ def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') ->
   | gamelist        | Gamelist  | Gamelist object that holds all the data for the gameList.xml.   |
   | mapping         | dict      | Dictionary containing object -> XML tag mapping (inverted map)  |
 
-  TODO: Need to handle a way to control what the name of the root element is. This appears to be case sensitive.
-
   """
+
   # Create the gamelist root node.
   doc = XML.Document()
-  # root = doc.createElement('gameList')
   root = doc.createElement(rootElement)
   doc.appendChild(root)
 
@@ -339,6 +338,7 @@ def gen_dir_gamelist(path: str, extension: str = None) -> Gamelist:
   | extension       | str       | File extension to limit build to.                               |
 
   """
+
   game_folder = Path(path)
 
   gamelist = Gamelist(

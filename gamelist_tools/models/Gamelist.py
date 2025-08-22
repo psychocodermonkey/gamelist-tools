@@ -149,13 +149,16 @@ class Game:
   magazine: Optional[str] = None
   folderlink: Optional[str] = None
 
+
   def __str__(self):
     """Return string representation of the game."""
     return f'{self.name} ({self.releasedate})'
 
+
   def __repr__(self) -> str:
     """Return unique identifier for Gamelist"""
     return f'<class Game({self.name}) {id(self)}>'
+
 
   def __eq__(self, other: 'Game') -> bool:
     """Return equality based on game name, release date, then path."""
@@ -169,6 +172,7 @@ class Game:
     return (
       self_value == other_value and self.releasedate == other.releasedate and self.path == other.path
     )
+
 
   def __lt__(self, other: 'Game') -> bool:
     """Return if the current game is less than another by name and release date."""
@@ -188,6 +192,7 @@ class Game:
     else:
       return False
 
+
   def __le__(self, other: 'Game') -> bool:
     """Reutrn if the current game is less than or equal to another by name and release date."""
     if not isinstance(other, Game):
@@ -205,6 +210,7 @@ class Game:
 
     else:
       return False
+
 
   def __gt__(self, other: 'Game') -> bool:
     """Return if the current game is greater than another by name and release date."""
@@ -224,6 +230,7 @@ class Game:
     else:
       return False
 
+
   def __ge__(self, other: 'Game') -> bool:
     """Return if the current game is greater than or equal to another by name and release date."""
     if not isinstance(other, Game):
@@ -241,6 +248,7 @@ class Game:
 
     else:
       return False
+
 
   def set_rel_paths(self, depth: int = 2, prepend: str = None, exclude: list[str] = None) -> None:
     """
@@ -344,25 +352,31 @@ class Gamelist:
   altemulator: Optional[str] = field(default=None)
   games: List[Game] = field(default_factory=list)
 
+
   def __str__(self) -> str:
     """Return string representation of the Gamelist."""
     return f'{self.system} - ({len(self.games)} games)'
+
 
   def __len__(self) -> int:
     """Return the number of games in the Gamelist."""
     return len(self.games)
 
+
   def __repr__(self) -> str:
     """Return unique identifier for Gamelist."""
     return f'<class Gamelist({self.system}) {id(self)}>'
+
 
   def sort(self) -> None:
     """Sort games in place"""
     self.games = sorted(self.games)
 
+
   def sorted(self) -> List[Game]:
     """Return a sorted list of games in this Gamelist."""
     return sorted(self.games)
+
 
   def __eq__(self, other: 'Gamelist') -> bool:
     """Return equality based on system."""
@@ -371,12 +385,14 @@ class Gamelist:
 
     return self.system == other.system
 
+
   def __lt__(self, other: 'Gamelist') -> bool:
     """Return if the current game is less than another by system."""
     if not isinstance(other, Gamelist):
       return NotImplemented
 
     return self.system < other.system
+
 
   def __le__(self, other: 'Gamelist') -> bool:
     """Reutrn if the current game is less than or equal to another system."""
@@ -385,6 +401,7 @@ class Gamelist:
 
     return self.system <= other.system
 
+
   def __gt__(self, other: 'Gamelist') -> bool:
     """Return if the current game is greater than another by system."""
     if not isinstance(other, Gamelist):
@@ -392,12 +409,14 @@ class Gamelist:
 
     return self.system > other.system
 
+
   def __ge__(self, other: 'Gamelist') -> bool:
     """Return if the current gamelsit is greater than or equal to another by system."""
     if not isinstance(other, Gamelist):
       return False
 
     return self.system >= other.system
+
 
   def set_rel_paths(self, depth: int = 2, prepend: str = None, exclude: list[str] = None) -> None:
     """
@@ -451,9 +470,11 @@ class RawGamelist:
   xml_decl: Optional[str] = field(default='<?xml version="1.0"?>')
   gamelist: Optional[XML.Element] = None
 
+
   def __str__(self) -> str:
     """Return string representation of the Gamelist"""
     return f'{self.system} - ({len(self.path)} games)'
+
 
   def __repr__(self) -> str:
     """Return unique identifier for Gamelist"""

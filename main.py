@@ -26,6 +26,7 @@ import argparse
 import time
 from pathlib import Path
 from gamelist_tools import ESDE
+
 # from gamelist_tools import Batocera
 from gamelist_tools import EmulationStation
 from gamelist_tools.utils.Ubiquitous import gen_xml, output_gamelist
@@ -53,7 +54,6 @@ def main(path: str, output: str) -> None:
   # Process all gamelists and output them to a directory.
   for gl in GAMELIST_DATA:
     try:
-
       # Sort the games in the gamelist.
       gl.sort()
 
@@ -64,13 +64,17 @@ def main(path: str, output: str) -> None:
 
       # Move images around on the object to set what we want showing up for other tags.
       for i, game in enumerate(gl.games):
+        # Clean up last played and other fields prior to generating the new list.
+        game.lastplayed = None
+        game.playcount = 0
+        game.favorite = False
+
+        if not game.thumbnail:
+          game.thumbnail = game.boxfront
 
         if not game.image:
           game.image = game.miximage if game.miximage else game.thumbnail
           # game.image = game.thumbnail if game.thumbnail else game.titleshot
-
-        if not game.thumbnail:
-          game.thumbnail = game.boxfront
 
         # Update the game object after changes are made.
         gl.games[i] = game
@@ -90,11 +94,11 @@ def main(path: str, output: str) -> None:
       output_dir = Path(f'{output}{gl.system}')
       output_gamelist(doc, output_dir)
 
-    except Exception as e: #noqa E722 Do not use bare except:
+    except Exception as e:  # noqa E722 Do not use bare except:
       print(f'Error processing :: {gl.system} :: gamelist!')
-      print(f"Error Type: {type(e).__name__}")
-      print(f"Error Value: {e}")
-      print("\n--- Full Traceback ---")
+      print(f'Error Type: {type(e).__name__}')
+      print(f'Error Value: {e}')
+      print('\n--- Full Traceback ---')
       print(traceback.format_exc())
 
   print(f'Gamelist file processing time: {end_time - start_time} seconds\n')

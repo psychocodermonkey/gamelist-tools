@@ -1,0 +1,65 @@
+# ty.toml
+# Portable "sane defaults" for solo dev projects:
+# - Respect .gitignore by default
+# - Exclude common junk/venvs/build output explicitly
+# - Keep diagnostics as warnings unless you choose otherwise
+
+[src]
+# By default, ty searches the project; you *can* narrow this to ["src", "tests"]
+# if you use that layout everywhere. Leaving it unset is more portable.
+#
+# include = ["src", "tests"]
+
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "site-packages",
+  "venv",
+]
+# ty respects .gitignore and friends by default; keep that on.
+# respect-ignore-files = true
+
+[environment]
+python-version = "3.13"
+# Keep this aligned with whatever you target in Ruff / your runtime.
+#python-version = "3.14"
+
+
+[terminal]
+# Don't fail CI just because of warnings (you can flip this later for CI).
+error-on-warning = false
+
+[rules]
+# If you want "basic-ish" behavior: treat everything as warnings globally.
+# (You can still promote specific rules to "error" below if you want.)
+all = "warn"
+
+# Example: if you decide some rules should be hard errors later:
+# incompatible-assignment = "error"
+# invalid-type-form = "error"
+
+# Optional: if you *never* want "type: ignore" comments to silence ty,
+# set this false so only "ty: ignore" works.
+# respect-type-ignore-comments = true

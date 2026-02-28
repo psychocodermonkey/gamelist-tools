@@ -20,6 +20,7 @@
 
 import os
 import re
+import fnmatch
 import xml.dom.minidom as XML
 from pathlib import Path
 # from ..models.Gamelist import RawGamelist, Gamelist, Game
@@ -171,7 +172,7 @@ def parse_value(value_type: str, value: str) -> (bool | int | str):
   return value  # Default to string if type is unknown
 
 
-def get_text(node: XML.Element, value: str) -> str:
+def get_text(node: XML.Element, value: str) -> str | None:
   """
   # Get text from XML Node
 
@@ -193,12 +194,12 @@ def get_text(node: XML.Element, value: str) -> str:
   tag_node = node.getElementsByTagName(value)
   return tag_node[0].firstChild.nodeValue.strip() if tag_node and tag_node[0].firstChild else None
 
-
-def find_files(name: str, path: str) -> list[str]:
+# Changing out the find_file function for os.walk version as it measurably faster.
+# def find_files(name: str, path: str) -> list[str]:
   """
   # Find files matching by name in path recursively
 
-  Find all files in a tree that match a file name. Filename is wild carded from beginning of filename.
+  Find all files in a tree that match a file name. Filename is wildcarded to ignore extensions.
 
   ```python
   find_files(name: str, path: str) -> list[str]
@@ -207,15 +208,44 @@ def find_files(name: str, path: str) -> list[str]:
   ## Properties
 
   | Property        | Type      | Description |
-  |:----------------|:----------|:--------------------------------------------|
-  | name            | str       | Filename to search directory tree for.      |
-  | path            | str       | Starting directory.                         |
+  |:----------------|:----------|:------------------------------------------------------------|
+  | name            | str       | Filename to search directory tree for. (No extension)       |
+  | path            | str       | Starting directory.                                         |
 
   """
 
+  # Replace problematic characters in names for rglob with wildcards.
+  #name = name.replace('[', r'?').replace(']', r'?') + '*'
+  #return [str(f) for f in Path(path).rglob(name + '*') if f.is_file()]
+
+
+def find_files(name: str, path: str) -> list[str]:
+  """
+    # Find files matching by name in path recursively
+
+  Find all files in a tree that match a file name. Filename is wildcarded to ignore extensions.
+
+    ## Properties
+
+    | Property        | Type      | Description |
+    |:----------------|:----------|:----------------------------------------------------------|
+    | name            | str       | Filename to search directory tree for. (No extension)     |
+    | path            | str       | Starting directory.                                       |
+  """
+
   # TODO: Look into if this should or should not be case insensitive.
-  name = name.replace('[', r'?').replace(']', r'?') + '*'
-  return [str(f) for f in Path(path).rglob(name + '*') if f.is_file()]
+  # TODO: Should this be doing the whole basename isolation along with the wildcard?
+
+  # Replace wildcard characters in the filename
+  name = name.rstrip() + '*'
+
+  matches = []
+  for root, dirs, files in os.walk(path):
+    for file in files:
+      if fnmatch.fnmatch(file, name):
+        matches.append(os.path.join(root, file))
+
+  return matches
 
 
 def enclosing_directory(path: str):
@@ -319,7 +349,7 @@ def gen_xml(gamelist: Gamelist, mapping: dict, rootElement: str = 'gameList') ->
   return doc.toprettyxml(indent='\t', newl='\n')
 
 
-def gen_dir_gamelist(path: str, extension: str = None) -> Gamelist:
+def gen_dir_gamelist(path: str, extension: str | None = None) -> Gamelist:
   """
   # Generate Gamelist for games in directory
 
